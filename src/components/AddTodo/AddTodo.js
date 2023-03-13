@@ -1,12 +1,19 @@
 import React, { useState } from "react";
+import { v1 as uuidv1 } from 'uuid';
 
-function AddTodo() {
+function AddTodo({todo, setTodo}) {
 
     const [value, setValue] = useState('')
-    console.log(value);
 
     function saveTodo() {
-
+        setTodo(
+            [...todo, {
+                id: uuidv1(),
+                title: value,
+                status: true
+            }]
+        )
+        setValue('')
     }
 
     return (
@@ -17,4 +24,4 @@ function AddTodo() {
     )
 }
 
-export default AddTodo
+export default AddTodo;
