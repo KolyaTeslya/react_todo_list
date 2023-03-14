@@ -1,8 +1,14 @@
 import React, { useState } from "react";
+import { Row, Col, Button, FormControl } from 'react-bootstrap';
+import s from './TodoList.module.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSave, faTrash, faEdit, faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons'
+
 
 function TodoList({todo, setTodo}) {
 
     const [edit, setEdit] = useState(null)
+    const [value, setValue] = useState('')
     
     function deleteTodo(id) {
         let newTodo = [...todo].filter(item => item .id!=id)
@@ -19,8 +25,20 @@ function TodoList({todo, setTodo}) {
         setTodo(newTodo)
     }
 
-    function editTodo(id) {
+    function editTodo(id, title) {
         setEdit(id)
+        setValue(title)
+    }
+
+    function saveTodo(id) {
+        let newTodo = [...todo].map(item => {
+            if(item.id == id) {
+                item.title = value
+            }
+            return item
+        })
+     setTodo(newTodo)
+     setEdit(null)
     }
 
 
@@ -28,20 +46,39 @@ function TodoList({todo, setTodo}) {
         <div>
             {
                 todo.map(item => (
-                    <div key={item.id}>
+                    <div key={item.id} className={s.listItems}>
                         {
                             edit == item.id ? 
                                 <div>
-                                    <input />
-                                    <button>Сохранить</button>
+                                    <input value={value} onChange={(e) => setValue(e.target.value)} />                                   
                                 </div>
                                 :
-                                <div>{item.title}</div>
+                                <div className={ !item.status ? s.close : ''}>{item.title}</div>
+                        }
+                        {
+                            edit == item.id ? 
+                                <div>
+                                    <Button onClick={() => saveTodo(item.id)}  size="lg" variant="success">
+                                        <FontAwesomeIcon icon={faSave} /></Button>
+                                </div> : 
+                                <div>
+                                    <Button onClick={() => deleteTodo(item.id)} variant="danger">
+                                        <FontAwesomeIcon icon={faTrash} /></Button>
+                                    <Button onClick={() => editTodo(item.id, item.title)} 
+                                            className={s.btn} variant="warning">
+                                            <FontAwesomeIcon icon={faEdit} /></Button>
+                                    <Button onClick={() => statusTodo(item.id)} 
+                                            className={s.btn} variant="info">
+                                            {
+                                                item.status ? <FontAwesomeIcon icon={faLockOpen} /> 
+                                                :  <FontAwesomeIcon icon={faLock} /> 
+                                            }
+                                     </Button>           
+                                                                        
+                                </div>
                         }
                         
-                        <button onClick={() => deleteTodo(item.id)}>Удалить</button>
-                        <button onClick={() => editTodo(item.id)}>Редактировать</button>
-                        <button onClick={() => statusTodo(item.id)}>Закрыть / Открыть</button>
+
                     </div>
                 ))
             }
