@@ -24,7 +24,7 @@ function AddTodo({todo, setTodo}) {
         <Row>
             <Col className={s.addTodoForm}>
                 <FormControl placeholder='Введите задачу' value={value} onChange={ (e) => setValue(e.target.value)} />
-                <Button variant="success" onClick={saveTodo} className={s.btn}> Сохранить</Button>
+                <Button variant="success" onClick={saveTodo} className={s.btn}> Добавить</Button>
             </Col>
         </Row>
     )
